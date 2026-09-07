@@ -33,7 +33,10 @@ Alembic migrations under `alembic/` are the source of truth for PostgreSQL schem
 - `GET /api/v1/health`
 - `POST /api/v1/jobs/search`
 
-The search endpoint currently returns normalized live JobTech results. Database-backed ingestion and stored-job endpoints are the next implementation milestone.
+The search endpoint retrieves a live JobTech page, upserts each complete source payload into
+`raw_job_postings`, and refreshes its linked normalized row in `jobs`. Repeating a search updates
+the same source identities instead of creating duplicates. Stored-job read endpoints remain a
+later milestone.
 
 ## Development
 

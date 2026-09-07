@@ -21,7 +21,20 @@ async def test_search_passes_pagination_and_query() -> None:
         assert request.url.params["remote"] == "true"
         assert request.url.params["experience"] == "false"
         assert request.headers["api-key"] == "test-key"
-        return httpx.Response(200, json={"total": {"value": 1}, "hits": []})
+        return httpx.Response(
+            200,
+            json={
+                "total": {"value": 1},
+                "hits": [
+                    {
+                        "id": "job-1",
+                        "headline": "Data Engineer",
+                        "provider_only": {"nested": True},
+                    }
+                ],
+                "new_provider_field": "retained",
+            },
+        )
 
     async with JobTechClient(
         base_url="https://jobtech.example",
@@ -39,4 +52,7 @@ async def test_search_passes_pagination_and_query() -> None:
         )
 
     assert result.total.value == 1
-    assert result.hits == []
+    assert result.hits[0].model_dump(mode="json", exclude_unset=True)["provider_only"] == {
+        "nested": True
+    }
+    assert result.model_extra == {"new_provider_field": "retained"}

@@ -18,13 +18,20 @@ def test_normalize_search_result_maps_job_and_pagination() -> None:
                 {
                     "id": "job-123",
                     "headline": "Data Engineer",
+                    "access": "As soon as possible",
                     "relevance": 0.91,
                     "webpage_url": "https://example.test/jobs/job-123",
                     "application_deadline": "2026-10-01T23:59:59",
                     "number_of_vacancies": 2,
                     "description": {"text": "Build reliable data pipelines."},
-                    "employment_type": {"label": "Vanlig anställning"},
-                    "working_hours_type": {"label": "Heltid"},
+                    "employment_type": {
+                        "concept_id": "kpPX_CNN_gDU",
+                        "label": "Tillsvidareanställning",
+                    },
+                    "working_hours_type": {
+                        "concept_id": "6YE1_gAC_R2G",
+                        "label": "Heltid",
+                    },
                     "duration": {"label": "Tills vidare"},
                     "employer": {"name": "Example AB"},
                     "application_details": {"url": "https://example.test/apply"},
@@ -52,5 +59,7 @@ def test_normalize_search_result_maps_job_and_pagination() -> None:
     assert result.jobs[0].source_job_id == "job-123"
     assert result.jobs[0].company == "Example AB"
     assert result.jobs[0].location == "Stockholm, Stockholms län, Sverige"
-    assert result.jobs[0].working_hours == "Heltid"
+    assert result.jobs[0].employment_start == "As soon as possible"
+    assert result.jobs[0].employment_type == "permanent_employment"
+    assert result.jobs[0].working_hours == "full_time"
     assert result.jobs[0].application_url == "https://example.test/apply"

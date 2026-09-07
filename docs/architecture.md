@@ -42,6 +42,9 @@ Job data is divided by responsibility:
 
 Each raw posting belongs to at most one canonical job, while one canonical job may collect listings from several sources. Source identity is enforced by `(source, source_job_id)`; cross-source matching remains conservative so uncertain advertisements are not merged.
 
+Controlled canonical fields use stable English values derived from provider taxonomy identities.
+Source-language labels and all other provider fields remain unchanged in the raw payload.
+
 ## Future extraction
 
 If agent workloads become long-running or require separate scaling, an agent worker can be added as another runtime entry point using the same backend package. A separate service should only be introduced when deployment, scaling, isolation, or ownership requirements justify it.

@@ -34,6 +34,7 @@ class JobSummary(BaseModel):
     company: str | None
     location: str | None
     description: str
+    employment_start: str | None
     employment_type: str | None
     working_hours: str | None
     duration: str | None

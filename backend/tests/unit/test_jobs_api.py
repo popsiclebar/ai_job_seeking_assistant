@@ -11,7 +11,7 @@ from app.schemas.jobs import JobSearchResponse
 def test_search_jobs_returns_normalized_response(monkeypatch) -> None:
     """Confirm a valid request is delegated and serialized through the public endpoint."""
 
-    async def fake_search_jobtech_jobs(search_request, settings) -> JobSearchResponse:
+    async def fake_search_jobtech_jobs(search_request, settings, session) -> JobSearchResponse:
         """Return an empty normalized page while preserving validated request metadata."""
         return JobSearchResponse(
             query=search_request.query,

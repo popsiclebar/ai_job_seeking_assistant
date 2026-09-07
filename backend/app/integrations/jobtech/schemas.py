@@ -1,5 +1,5 @@
-"""Models the subset of JobTech's search response consumed by this application.
-Unknown provider fields are ignored so harmless upstream additions do not break searches."""
+"""Models JobTech search fields while retaining unmodeled provider data.
+Typed fields drive normalization, and allowed extras preserve complete raw postings."""
 
 from datetime import datetime
 
@@ -7,9 +7,9 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class JobTechModel(BaseModel):
-    """Apply tolerant parsing consistently to external JobTech payloads."""
+    """Accept upstream additions and retain them for raw-payload persistence."""
 
-    model_config = ConfigDict(extra="ignore")
+    model_config = ConfigDict(extra="allow")
 
 
 class JobTechTotal(JobTechModel):
@@ -19,8 +19,9 @@ class JobTechTotal(JobTechModel):
 
 
 class JobTechTaxonomyItem(JobTechModel):
-    """Represent one JobTech taxonomy value when only its display label is needed."""
+    """Represent a JobTech taxonomy identity and its source-language display label."""
 
+    concept_id: str | None = None
     label: str | None = None
 
 
@@ -56,6 +57,7 @@ class JobTechHit(JobTechModel):
 
     id: str
     headline: str
+    access: str | None = None
     relevance: float | None = None
     webpage_url: str | None = None
     application_deadline: datetime | None = None

@@ -4,6 +4,19 @@ Normalization is deterministic and contains no ranking, persistence, or AI behav
 from app.integrations.jobtech.schemas import JobTechSearchResult
 from app.schemas.jobs import JobSearchRequest, JobSearchResponse, JobSummary
 
+EMPLOYMENT_TYPE_BY_CONCEPT_ID = {
+    "1paU_aCR_nGn": "on_demand_employment",
+    "EBhX_Qm2_8eX": "seasonal_employment",
+    "gro4_cWF_6D7": "substitute_employment",
+    "kpPX_CNN_gDU": "permanent_employment",
+    "sTu5_NBQ_udq": "fixed_term_employment",
+    "PFZr_Syz_cUq": "regular_employment",
+}
+WORK_SCHEDULE_BY_CONCEPT_ID = {
+    "6YE1_gAC_R2G": "full_time",
+    "947z_JGS_Uk2": "part_time",
+}
+
 
 def normalize_search_result(
     source_result: JobTechSearchResult,
@@ -26,8 +39,17 @@ def normalize_search_result(
                 company=hit.employer.name if hit.employer else None,
                 location=", ".join(location_parts) or None,
                 description=hit.description.text,
-                employment_type=hit.employment_type.label if hit.employment_type else None,
-                working_hours=hit.working_hours_type.label if hit.working_hours_type else None,
+                employment_start=hit.access,
+                employment_type=(
+                    EMPLOYMENT_TYPE_BY_CONCEPT_ID.get(hit.employment_type.concept_id)
+                    if hit.employment_type and hit.employment_type.concept_id
+                    else None
+                ),
+                working_hours=(
+                    WORK_SCHEDULE_BY_CONCEPT_ID.get(hit.working_hours_type.concept_id)
+                    if hit.working_hours_type and hit.working_hours_type.concept_id
+                    else None
+                ),
                 duration=hit.duration.label if hit.duration else None,
                 workplace_model=hit.workplace_model.label if hit.workplace_model else None,
                 occupation=hit.occupation.label if hit.occupation else None,
