@@ -1,14 +1,17 @@
-"""Defines the public request and normalized response contracts for job discovery.
-These models shield frontend consumers from JobTech-specific field names and nesting."""
+"""Defines contracts for internal ingestion and persisted job browsing.
+These models shield consumers from provider fields and database internals."""
 
 from datetime import datetime
 from typing import Literal
+from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
+
+StoredJobSort = Literal["published_desc", "published_asc", "deadline_asc"]
 
 
 class JobSearchRequest(BaseModel):
-    """Describe one user-initiated JobTech search and its source pagination."""
+    """Describe one backend-owned JobTech ingestion page."""
 
     query: str = Field(min_length=1, max_length=200, examples=["data engineer Stockholm"])
     limit: int = Field(default=10, ge=1, le=100)
@@ -61,3 +64,50 @@ class JobSearchResponse(BaseModel):
     source_query_time_ms: int | None
     source_result_time_ms: int | None
     jobs: list[JobSummary]
+
+
+class StoredJob(BaseModel):
+    """Expose the normalized fields needed to browse one persisted opportunity."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    title: str
+    company: str | None
+    location: str | None
+    employment_start: str | None
+    employment_type: str | None
+    work_schedule: str | None
+    work_mode: Literal["on_site", "hybrid", "remote"] | None
+    published_at: datetime | None
+    application_deadline: datetime | None
+    application_url: str | None
+
+
+class StoredJobListResponse(BaseModel):
+    """Return one stable page from the canonical jobs stored in PostgreSQL."""
+
+    total: int
+    limit: int
+    offset: int
+    next_offset: int | None
+    jobs: list[StoredJob]
+
+
+class StoredJobSource(BaseModel):
+    """Identify one provider listing retained for a canonical opportunity."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    source: str
+    source_job_id: str
+    source_url: str | None
+    published_at: datetime | None
+    retrieved_at: datetime
+
+
+class StoredJobDetail(StoredJob):
+    """Expose the complete normalized JD and its available provider listings."""
+
+    job_description: str
+    sources: list[StoredJobSource]

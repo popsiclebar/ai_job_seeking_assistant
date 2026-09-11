@@ -31,12 +31,18 @@ Alembic migrations under `alembic/` are the source of truth for PostgreSQL schem
 ## Current API
 
 - `GET /api/v1/health`
-- `POST /api/v1/jobs/search`
+- `GET /api/v1/jobs`
+- `GET /api/v1/jobs/{job_id}`
 
-The search endpoint retrieves a live JobTech page, upserts each complete source payload into
-`raw_job_postings`, and refreshes its linked normalized row in `jobs`. Repeating a search updates
-the same source identities instead of creating duplicates. Stored-job read endpoints remain a
-later milestone.
+JobTech ingestion is a backend-owned operation, not a public user API. Run one bounded local page
+with `python -m app.commands.ingest_jobs --query "data engineer Stockholm" --limit 100`. The command
+upserts each complete source payload into `raw_job_postings` and refreshes its linked normalized row
+in `jobs`; repeating it updates the same source identities instead of creating duplicates.
+
+The job endpoints read canonical records from PostgreSQL without contacting JobTech. The
+collection supports text, location, work mode, employment type, schedule, publication date,
+expiration, sorting, limit, and offset query parameters. Job detail includes the complete normalized
+description and every retained source listing linked to the canonical job.
 
 ## Development
 
