@@ -2,7 +2,8 @@
 
 A local-first application for discovering Swedish jobs, evaluating job fit, preparing truthful HTML application documents, and tracking applications.
 
-The current executable slice contains a FastAPI backend, typed JobTech ingestion into PostgreSQL, and a Next.js frontend.
+The current executable slice contains a FastAPI backend, typed JobTech ingestion into PostgreSQL,
+stored-job retrieval, and a Next.js job-review workspace.
 
 ## Repository layout
 
@@ -43,29 +44,27 @@ Frontend:
 
 ```bash
 cd frontend
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
-Then open `http://localhost:3000`. Backend API documentation is available at `http://localhost:8000/docs`.
+Then open `http://localhost:3000/jobs`. Backend API documentation is available at
+`http://localhost:8000/docs`.
 
-Run a first persisted search with:
+Run a first backend-owned ingestion with:
 
 ```bash
-curl -X POST http://127.0.0.1:8000/api/v1/jobs/search \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "query": "data engineer Stockholm",
-    "limit": 5,
-    "offset": 0,
-    "sort": "pubdate-desc"
-  }'
+cd backend
+source .venv/bin/activate
+python -m app.commands.ingest_jobs --query "data engineer Stockholm" --limit 100
 ```
 
 See [backend/README.md](backend/README.md) for backend boundaries and the current API surface.
 
 ## Current scope
 
-Same-source ingestion and normalization are working end to end. Stored-job retrieval, cross-source matching, preference-based discovery, fit evaluation, document generation, and application tracking interfaces remain upcoming milestones.
+Backend-owned same-source ingestion, normalization, stored-job retrieval, and the database-only Job
+Search interface work end to end. Application tracking, scheduled ingestion, cross-source matching,
+preference-based discovery, fit evaluation, and document generation remain upcoming milestones.
 
 See [docs/architecture.md](docs/architecture.md) for the public module boundaries. Detailed decisions, plans, and progress are maintained locally in the ignored `.agents/` directory.

@@ -1,16 +1,10 @@
 /**
- * Defines the Jobs route used for discovery, filtering, and fit inspection.
- * The route will become the first frontend consumer of normalized JobTech results.
+ * Defines the Jobs route for database-only search and detail review.
+ * Provider ingestion deliberately remains outside the user-facing frontend.
  */
-import { PlaceholderPage } from "@/components/layout/PlaceholderPage";
+import { JobsWorkspace } from "@/features/jobs/JobsWorkspace";
 
 export default function JobsPage() {
-  /** Render the Jobs feature boundary until live search results are connected. */
-  return (
-    <PlaceholderPage
-      eyebrow="Jobs"
-      title="Discover relevant roles."
-      description="Search, filter, inspect, and rank Swedish job postings from JobTech."
-    />
-  );
+  /** Render the database-backed job collection and selected-job detail. */
+  return <JobsWorkspace />;
 }
