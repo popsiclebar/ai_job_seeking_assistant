@@ -9,8 +9,8 @@ export default function ApplicationsPage() {
   return (
     <PlaceholderPage
       eyebrow="Applications"
-      title="Track every application."
-      description="Follow active, applied, interview, offer, rejected, and expired opportunities."
+      title="Track every application"
+      description="Application status, dates, and next actions will live here once persistence is connected."
     />
   );
 }

@@ -6,6 +6,7 @@ import "@fontsource-variable/inter";
 import type { Metadata } from "next";
 
 import { AppSidebar } from "@/components/layout/AppSidebar";
+import { AppTopbar } from "@/components/layout/AppTopbar";
 
 import "./globals.css";
 
@@ -19,14 +20,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
-        <div className="min-h-screen bg-white md:flex">
+        <div className="min-h-screen bg-canvas md:flex">
           <AppSidebar />
           <div className="min-w-0 flex-1">
-            <header className="flex h-16 items-center justify-between border-b bg-white px-8 max-md:h-14 max-md:px-4">
-              <span className="text-sm font-medium text-muted-foreground">Job search workspace</span>
-              <span className="text-xs font-medium text-muted-foreground">Local development</span>
-            </header>
-            <main className="min-w-0 px-8 py-7 max-md:px-4 max-md:py-6">{children}</main>
+            <AppTopbar />
+            <main className="mx-auto min-w-0 max-w-[1488px] px-6 py-6 max-lg:px-5 max-md:px-4 max-md:py-5">
+              {children}
+            </main>
           </div>
         </div>
       </body>

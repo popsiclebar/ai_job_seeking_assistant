@@ -9,8 +9,8 @@ export default function SettingsPage() {
   return (
     <PlaceholderPage
       eyebrow="Settings"
-      title="Control search and AI preferences."
-      description="Configure JobTech search criteria and one global OpenAI model without exposing secrets."
+      title="Control your workspace"
+      description="Search criteria and model preferences will be managed here while secrets remain server-side."
     />
   );
 }

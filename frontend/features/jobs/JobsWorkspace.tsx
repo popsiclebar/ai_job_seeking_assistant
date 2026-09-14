@@ -74,16 +74,17 @@ export function JobsWorkspace() {
   }, [selectedJobId]);
 
   return (
-    <section className="max-w-none">
-      <header className="mb-6 flex items-end justify-between gap-6">
+    <section>
+      <header className="flex min-h-14 items-start justify-between gap-6 max-sm:flex-col max-sm:gap-3">
         <div>
-          <h1 className="text-3xl font-semibold tracking-[-0.025em]">Job Search</h1>
-          <p className="mt-1 text-base text-muted-foreground">
-            Search jobs already collected in your database.
+          <p className="text-xs font-medium text-muted-foreground">Opportunity inbox</p>
+          <h1 className="mt-1 text-2xl leading-8 font-semibold tracking-[-0.025em] text-foreground">Job search</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Compare active roles collected from trusted job sources.
           </p>
         </div>
-        <p className="text-sm text-muted-foreground max-sm:hidden" aria-live="polite">
-          <strong className="font-semibold text-foreground">{jobPage?.total ?? "—"}</strong>{" "}
+        <p className="rounded-lg bg-surface px-3 py-2 text-xs text-muted-foreground ring-1 ring-border" aria-live="polite">
+          <strong className="font-semibold text-foreground tabular-nums">{jobPage?.total ?? "—"}</strong>{" "}
           {filters.includeExpired ? "matching jobs" : "matching active jobs"}
         </p>
       </header>
@@ -98,7 +99,7 @@ export function JobsWorkspace() {
         }}
       />
 
-      <div className="mt-5 grid grid-cols-[minmax(570px,1.12fr)_minmax(425px,0.88fr)] gap-4 max-xl:grid-cols-1">
+      <div className="mt-4 grid grid-cols-[minmax(360px,0.72fr)_minmax(480px,1fr)] items-start gap-4 max-[1199px]:grid-cols-1">
         <JobResults
           jobPage={jobPage}
           listState={listState}

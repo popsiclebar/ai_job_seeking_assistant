@@ -1,3 +1,8 @@
+# Frontend design guidance
+
+Read `DESIGN.md` in this directory before creating or changing an interface.
+For local implementation and review guidance, also read `../.agents/frontend-design/README.md` when present. The public design guide is self-contained when that private folder is unavailable.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know

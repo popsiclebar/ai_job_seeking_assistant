@@ -9,8 +9,8 @@ export default function ProfilePage() {
   return (
     <PlaceholderPage
       eyebrow="Candidate profile"
-      title="Keep your evidence accurate."
-      description="Maintain experience, skills, preferences, and candidate knowledge used for fit evaluation."
+      title="Keep your evidence accurate"
+      description="Your experience, skills, and preferences will become the evidence used for job-fit evaluation."
     />
   );
 }

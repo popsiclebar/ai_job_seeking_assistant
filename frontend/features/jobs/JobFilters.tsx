@@ -22,8 +22,8 @@ type JobFiltersProps = {
 };
 
 const labelClassName =
-  "mb-2 text-xs font-semibold uppercase tracking-[0.04em] text-muted-foreground";
-const inputClassName = "h-10 rounded-md bg-white px-3";
+  "mb-1.5 text-xs font-medium text-muted-foreground";
+const inputClassName = "h-9 rounded-lg border-input bg-white px-3 text-base sm:text-[13px]";
 
 export function JobFilters({ filters, onChange, onSubmit }: JobFiltersProps) {
   /** Collect and submit one complete database query without invoking provider ingestion. */
@@ -35,7 +35,7 @@ export function JobFilters({ filters, onChange, onSubmit }: JobFiltersProps) {
 
   return (
     <form
-      className="grid grid-cols-[1.35fr_1fr_0.8fr_0.8fr_0.9fr_auto] items-end gap-3 rounded-lg border px-4 py-4 max-2xl:grid-cols-3 max-lg:grid-cols-2 max-sm:grid-cols-1"
+      className="mt-5 grid grid-cols-[1.35fr_1fr_0.8fr_0.8fr_0.9fr_auto] items-end gap-3 rounded-xl border border-border bg-surface p-4 shadow-[0_1px_2px_rgb(9_9_17_/_0.025)] max-2xl:grid-cols-3 max-lg:grid-cols-2 max-sm:grid-cols-1"
       onSubmit={submitFilters}
     >
       <div>
@@ -76,7 +76,7 @@ export function JobFilters({ filters, onChange, onSubmit }: JobFiltersProps) {
           Work mode
         </Label>
         <NativeSelect
-          className="w-full"
+          className="w-full [&_select]:h-9 [&_select]:rounded-lg [&_select]:bg-white [&_select]:px-3 [&_select]:text-base sm:[&_select]:text-[13px]"
           id="filter-work-mode"
           onChange={(event) =>
             onChange({
@@ -98,7 +98,7 @@ export function JobFilters({ filters, onChange, onSubmit }: JobFiltersProps) {
           Published
         </Label>
         <NativeSelect
-          className="w-full"
+          className="w-full [&_select]:h-9 [&_select]:rounded-lg [&_select]:bg-white [&_select]:px-3 [&_select]:text-base sm:[&_select]:text-[13px]"
           id="filter-age"
           onChange={(event) =>
             onChange({
@@ -121,7 +121,7 @@ export function JobFilters({ filters, onChange, onSubmit }: JobFiltersProps) {
           Sort by
         </Label>
         <NativeSelect
-          className="w-full"
+          className="w-full [&_select]:h-9 [&_select]:rounded-lg [&_select]:bg-white [&_select]:px-3 [&_select]:text-base sm:[&_select]:text-[13px]"
           id="filter-sort"
           onChange={(event) =>
             onChange({
@@ -137,18 +137,18 @@ export function JobFilters({ filters, onChange, onSubmit }: JobFiltersProps) {
         </NativeSelect>
       </div>
 
-      <div className="grid gap-2">
-        <div className="flex h-6 items-center gap-2">
+      <div className="grid gap-1.5">
+        <div className="flex h-5 items-center gap-2">
           <Checkbox
             checked={filters.includeExpired}
             id="include-expired"
             onCheckedChange={(checked) => onChange({ ...filters, includeExpired: checked })}
           />
-          <Label className="text-sm font-normal" htmlFor="include-expired">
+          <Label className="text-xs font-normal text-muted-foreground" htmlFor="include-expired">
             Include expired
           </Label>
         </div>
-        <Button className="h-10 rounded-md px-5" type="submit">
+        <Button className="h-9 rounded-lg px-4 text-[13px]" type="submit">
           <Search aria-hidden="true" data-icon="inline-start" />
           Search
         </Button>

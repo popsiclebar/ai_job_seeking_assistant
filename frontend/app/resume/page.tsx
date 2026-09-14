@@ -9,8 +9,8 @@ export default function ResumePage() {
   return (
     <PlaceholderPage
       eyebrow="Resume"
-      title="Edit and preview your HTML resume."
-      description="Application documents will use stable HTML and print CSS for browser PDF export."
+      title="Prepare a focused resume"
+      description="Edit and preview stable HTML documents before exporting them through the browser."
     />
   );
 }
