@@ -1,16 +1,10 @@
 /**
- * Defines the application-tracking route.
- * It will present submitted jobs and their small, explicit status model.
+ * Defines the Applications route for tracking roles from shortlist to outcome.
+ * The feature module owns data loading and editing; this file only mounts it.
  */
-import { PlaceholderPage } from "@/components/layout/PlaceholderPage";
+import { ApplicationsWorkspace } from "@/features/applications/ApplicationsWorkspace";
 
 export default function ApplicationsPage() {
-  /** Render the Applications feature boundary until tracking is implemented. */
-  return (
-    <PlaceholderPage
-      eyebrow="Applications"
-      title="Track every application"
-      description="Application status, dates, and next actions will live here once persistence is connected."
-    />
-  );
+  /** Render the database-backed application tracker. */
+  return <ApplicationsWorkspace />;
 }

@@ -11,7 +11,6 @@ from sqlalchemy import (
     DateTime,
     Enum,
     ForeignKey,
-    ForeignKeyConstraint,
     String,
     Text,
     UniqueConstraint,
@@ -24,14 +23,15 @@ from app.database.base import Base
 
 
 class ApplicationStatus(StrEnum):
-    """Restrict application tracking to the lifecycle accepted in the product brief."""
+    """Track one opportunity from shortlist to outcome.
 
-    ACTIVE = "active"
+    Ghosted and withdrawn applications are recorded as rejected because the outcome is the same."""
+
+    SHORTLISTED = "shortlisted"
     APPLIED = "applied"
-    INTERVIEW = "interview"
+    INTERVIEWING = "interviewing"
     OFFER = "offer"
     REJECTED = "rejected"
-    EXPIRED = "expired"
 
 
 class Job(Base):
@@ -65,7 +65,6 @@ class RawJobPosting(Base):
     __tablename__ = "raw_job_postings"
     __table_args__ = (
         UniqueConstraint("source", "source_job_id", name="uq_raw_job_source_identity"),
-        UniqueConstraint("id", "job_id", name="uq_raw_job_and_canonical_job"),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -87,25 +86,27 @@ class RawJobPosting(Base):
 
 
 class Application(Base):
-    """Track the user's status and generated documents for one canonical job."""
+    """Track one opportunity the user shortlisted or applied to, from any job source.
+
+    The optional job link connects applications to collected jobs without requiring that every
+    application originate from an ingested provider listing."""
 
     __tablename__ = "applications"
     __table_args__ = (
-        ForeignKeyConstraint(
-            ["raw_job_posting_id", "job_id"],
-            ["raw_job_postings.id", "raw_job_postings.job_id"],
-            name="fk_application_source_for_job",
+        CheckConstraint(
+            "status = 'shortlisted' OR applied_on IS NOT NULL",
+            name="ck_applications_applied_on_after_shortlist",
         ),
     )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    job_id: Mapped[uuid.UUID] = mapped_column(
+    job_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("jobs.id", ondelete="RESTRICT"),
-        nullable=False,
+        ForeignKey("jobs.id", ondelete="SET NULL"),
         unique=True,
     )
-    raw_job_posting_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    company: Mapped[str] = mapped_column(Text, nullable=False)
+    job_title: Mapped[str] = mapped_column(Text, nullable=False)
     status: Mapped[ApplicationStatus] = mapped_column(
         Enum(
             ApplicationStatus,
@@ -113,9 +114,24 @@ class Application(Base):
             values_callable=lambda statuses: [status.value for status in statuses],
         ),
         nullable=False,
-        default=ApplicationStatus.ACTIVE,
-        server_default=ApplicationStatus.ACTIVE.value,
+        index=True,
+        default=ApplicationStatus.SHORTLISTED,
+        server_default=ApplicationStatus.SHORTLISTED.value,
     )
-    application_date: Mapped[date | None] = mapped_column(Date)
-    resume_html: Mapped[str | None] = mapped_column(Text)
-    cover_letter_html: Mapped[str | None] = mapped_column(Text)
+    applied_on: Mapped[date | None] = mapped_column(Date)
+    deadline: Mapped[date | None] = mapped_column(Date)
+    job_url: Mapped[str | None] = mapped_column(Text)
+    location: Mapped[str | None] = mapped_column(Text)
+    source: Mapped[str | None] = mapped_column(Text)
+    notes: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )

@@ -4,7 +4,7 @@ These tests protect the accepted table boundaries and identity constraints."""
 from sqlalchemy import UniqueConstraint
 
 from app.database.base import Base
-from app.database.models import ApplicationStatus  # noqa: F401
+from app.database.models import ApplicationStatus
 
 
 def test_database_metadata_contains_three_job_domain_tables() -> None:
@@ -26,13 +26,21 @@ def test_raw_postings_have_source_identity_and_published_date() -> None:
     assert "content_hash" not in table.columns
 
 
-def test_application_status_matches_product_brief() -> None:
-    """Restrict tracking states to the six statuses accepted for the MVP."""
-    assert {status.value for status in ApplicationStatus} == {
-        "active",
+def test_application_status_matches_tracker_lifecycle() -> None:
+    """Keep the five tracker statuses; ghosted and withdrawn outcomes are recorded as rejected."""
+    assert [status.value for status in ApplicationStatus] == [
+        "shortlisted",
         "applied",
-        "interview",
+        "interviewing",
         "offer",
         "rejected",
-        "expired",
-    }
+    ]
+
+
+def test_applications_do_not_require_a_collected_job() -> None:
+    """Allow tracking applications found on any job board, not only ingested listings."""
+    table = Base.metadata.tables["applications"]
+
+    assert table.columns["job_id"].nullable is True
+    assert table.columns["company"].nullable is False
+    assert table.columns["job_title"].nullable is False

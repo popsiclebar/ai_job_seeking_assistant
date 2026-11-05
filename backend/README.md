@@ -33,11 +33,22 @@ Alembic migrations under `alembic/` are the source of truth for PostgreSQL schem
 - `GET /api/v1/health`
 - `GET /api/v1/jobs`
 - `GET /api/v1/jobs/{job_id}`
+- `GET /api/v1/applications` — filter by `status` and `query`; includes per-status counts
+- `POST /api/v1/applications`
+- `PATCH /api/v1/applications/{application_id}`
+- `DELETE /api/v1/applications/{application_id}`
 
 JobTech ingestion is a backend-owned operation, not a public user API. Run one bounded local page
 with `python -m app.commands.ingest_jobs --query "data engineer Stockholm" --limit 100`. The command
 upserts each complete source payload into `raw_job_postings` and refreshes its linked normalized row
 in `jobs`; repeating it updates the same source identities instead of creating duplicates.
+
+Applications move through `shortlisted → applied → interviewing → offer`, or end as `rejected`
+(ghosted and withdrawn outcomes are recorded as rejected). Leaving the shortlist without a date stamps
+today's date in Europe/Stockholm. Import an existing spreadsheet tracker (columns Date, Job Title,
+Company, Status, Job Link, Location, Source, Notes) with
+`python -m app.commands.import_applications path/to/tracker.xlsx --sheet "Full-time"`; rows already
+stored with the same company, title, and date are skipped.
 
 The job endpoints read canonical records from PostgreSQL without contacting JobTech. The
 collection supports text, location, work mode, employment type, schedule, publication date,

@@ -38,7 +38,7 @@ Job data is divided by responsibility:
 
 - `raw_job_postings` retains the latest complete payload and publication date for each source identity.
 - `jobs` holds deduplicated, source-independent fields used for filtering and evaluation.
-- `applications` holds the user's status and application-specific documents.
+- `applications` tracks each shortlisted or submitted opportunity from any job board: company, title, link, source, dates, status, and notes. Linking to a collected `jobs` row is optional.
 
 Each raw posting belongs to at most one canonical job, while one canonical job may collect listings from several sources. Source identity is enforced by `(source, source_job_id)`; cross-source matching remains conservative so uncertain advertisements are not merged.
 

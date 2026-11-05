@@ -64,7 +64,8 @@ See [backend/README.md](backend/README.md) for backend boundaries and the curren
 ## Current scope
 
 Backend-owned same-source ingestion, normalization, stored-job retrieval, and the database-only Job
-Search interface work end to end. Application tracking, scheduled ingestion, cross-source matching,
+Search interface work end to end, together with the Applications tracker (shortlist to outcome, with
+spreadsheet import). Scheduled ingestion, cross-source matching,
 preference-based discovery, fit evaluation, and document generation remain upcoming milestones.
 
 See [docs/architecture.md](docs/architecture.md) for the public module boundaries. Detailed decisions, plans, and progress are maintained locally in the ignored `.agents/` directory.
